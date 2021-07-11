@@ -1,3 +1,5 @@
+#!/usr/bin/env python3
+
 import numpy as np
 import argparse
 import cv2
@@ -69,8 +71,8 @@ def make_prediction(net, layer_names, labels, image, confidence, threshold):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('-w', '--weights', type=str, default='model/yolov3.weights', help='Path to model weights')
-    parser.add_argument('-cfg', '--config', type=str, default='model/yolov3.cfg', help='Path to configuration file')
+    parser.add_argument('-w', '--weights', type=str, default='model/yolov4-tiny.weights', help='Path to model weights')
+    parser.add_argument('-cfg', '--config', type=str, default='model/yolov4-tiny.cfg', help='Path to configuration file')
     parser.add_argument('-l', '--labels', type=str, default='model/coco.names', help='Path to label file')
     parser.add_argument('-c', '--confidence', type=float, default=0.7, help='Minimum confidence for a box to be detected.')
     parser.add_argument('-t', '--threshold', type=float, default=0.3, help='Threshold for Non-Max Suppression')
