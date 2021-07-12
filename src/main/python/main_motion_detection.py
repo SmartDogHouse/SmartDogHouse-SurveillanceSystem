@@ -22,7 +22,6 @@ while True:
     # text
     frame = vs.read()
     frame = frame[1]
-    text = "no detection"
     # if the frame could not be grabbed, then we have reached the end of the video
     if frame is None:
         break
@@ -48,9 +47,10 @@ while True:
     cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
                             cv2.CHAIN_APPROX_SIMPLE)
     cnts = imutils.grab_contours(cnts)
+    text = "no detection"
     # loop over the contours
     for c in cnts:
-        # if the contour is too small, ignore it
+        # if the contour area is too small, ignore it
         if cv2.contourArea(c) < args["min_area"]:
             continue
         # compute the bounding box for the contour, draw it on the frame,
@@ -67,6 +67,7 @@ while True:
     cv2.imshow("Security Feed", frame)
     cv2.imshow("Thresh", thresh)
     cv2.imshow("Frame Delta", frameDelta)
+    # take key pressed
     key = cv2.waitKey(1) & 0xFF
     # if the `q` key is pressed, break from the lop
     if key == ord("q"):

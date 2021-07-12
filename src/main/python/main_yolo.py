@@ -13,12 +13,12 @@ def extract_boxes_confidences_classids(outputs, confidence, width, height):
     classIDs = []
 
     for output in outputs:
-        for detection in output:            
+        for detection in output:
             # Extract the scores, classid, and the confidence of the prediction
             scores = detection[5:]
             classID = np.argmax(scores)
             conf = scores[classID]
-            
+
             # Consider only the predictions that are above the confidence threshold
             if conf > confidence:
                 # Scale the bounding box back to the size of the image
@@ -54,7 +54,7 @@ def draw_bounding_boxes(image, boxes, confidences, classIDs, idxs, colors):
 
 def make_prediction(net, layer_names, labels, image, confidence, threshold):
     height, width = image.shape[:2]
-    
+
     # Create a blob and pass it through the model
     blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
@@ -104,12 +104,12 @@ if __name__ == '__main__':
         print('Creating output directory if it doesn\'t already exist')
         os.makedirs('output', exist_ok=True)
 
-    # Get the ouput layer names
+    # Get the output layer names
     layer_names = net.getLayerNames()
     layer_names = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-
     if args.image_path != '':
+        # image path specified
         image = cv2.imread(args.image_path)
 
         boxes, confidences, classIDs, idxs = make_prediction(net, layer_names, labels, image, args.confidence, args.threshold)
@@ -120,13 +120,15 @@ if __name__ == '__main__':
         if args.show:
             cv2.imshow('YOLO Object Detection', image)
             cv2.waitKey(0)
-        
+
         if args.save:
             cv2.imwrite(f'output/{args.image_path.split("/")[-1]}', image)
     else:
+        # video path specified
         if args.video_path != '':
             cap = cv2.VideoCapture(args.video_path)
         else:
+            # nothing specified, using camera
             cap = cv2.VideoCapture(0)
 
         if args.save:
@@ -136,6 +138,7 @@ if __name__ == '__main__':
             name = args.video_path.split("/")[-1] if args.video_path else 'camera.avi'
             out = cv2.VideoWriter(f'output/{name}', cv2.VideoWriter_fourcc('M','J','P','G'), fps, (width, height))
 
+        # while loop for frames
         while cap.isOpened():
             ret, image = cap.read()
 
@@ -151,10 +154,10 @@ if __name__ == '__main__':
                 cv2.imshow('YOLO Object Detection', image)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
-            
+
             if args.save:
                 out.write(image)
-    
+
         cap.release()
         if args.save:
             out.release()
