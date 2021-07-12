@@ -7,7 +7,7 @@ secret.py
 key
 cert
 *.0
-
+*.weights
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

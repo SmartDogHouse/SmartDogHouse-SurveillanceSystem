@@ -23,7 +23,7 @@ def main():
     
     # Set up socket
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    s.bind(('198.162.0.53', 12345))
+    s.bind(('192.168.1.183', 12345))  # YOUR ADDRESS
     dat = b''
     dump_buffer(s)
 
