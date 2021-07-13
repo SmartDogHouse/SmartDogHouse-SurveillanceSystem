@@ -6,6 +6,9 @@ secret.py
 *.mp4
 key
 cert
+*.pem
+*.crt.txt
+*.key
 *.0
 *.weights
 

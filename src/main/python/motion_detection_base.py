@@ -63,13 +63,13 @@ while True:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
                 (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
-    # show the frame and record if the user presses a key
+    # show the frame and record if the user presses a key_path
     cv2.imshow("Security Feed", frame)
     cv2.imshow("Thresh", thresh)
     cv2.imshow("Frame Delta", frameDelta)
-    # take key pressed
+    # take key_path pressed
     key = cv2.waitKey(1) & 0xFF
-    # if the `q` key is pressed, break from the lop
+    # if the `q` key_path is pressed, break from the lop
     if key == ord("q"):
         break
 # cleanup the camera and close any open windows
