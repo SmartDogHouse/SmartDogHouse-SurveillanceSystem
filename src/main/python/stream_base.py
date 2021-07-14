@@ -27,4 +27,4 @@ def video_feed():
 
 
 if __name__ == '__main__':
-    app.run(host="0.0.0.0") # exposes at the inner net the server with port default 5000
+    app.run(host="0.0.0.0")  # exposes at the inner net the server with port default 5000
