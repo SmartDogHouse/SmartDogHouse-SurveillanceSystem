@@ -4,8 +4,12 @@
 /.coverage
 secret.py
 *.mp4
+frame.jpg
 key
 cert
+*.pem
+*.crt.txt
+*.key
 *.0
 *.weights
 

@@ -6,6 +6,18 @@ import cv2
 import os
 import time
 
+from secret import PATH_TO_CERT, PATH_TO_ROOT, PATH_TO_KEY, MQTT_PORT, MQTT_CLIENT_ID, MQTT_HOST, MQTT_RECEIVE_TOPIC, MQTT_NOTIFY_TOPIC
+from mqtt_manager import MQTTManager
+
+
+mqtt_manager = MQTTManager(cert_path=PATH_TO_CERT, key_path=PATH_TO_KEY,  root_path=PATH_TO_ROOT, port=MQTT_PORT, client_id=MQTT_CLIENT_ID,
+                           server=MQTT_HOST)
+
+
+try:
+    mqtt_manager.connect()
+except Exception as e:
+    print('Cannot connect MQTT: ' + str(e))
 
 def extract_boxes_confidences_classids(outputs, confidence, width, height):
     boxes = []
@@ -13,12 +25,12 @@ def extract_boxes_confidences_classids(outputs, confidence, width, height):
     classIDs = []
 
     for output in outputs:
-        for detection in output:            
+        for detection in output:
             # Extract the scores, classid, and the confidence of the prediction
             scores = detection[5:]
             classID = np.argmax(scores)
             conf = scores[classID]
-            
+
             # Consider only the predictions that are above the confidence threshold
             if conf > confidence:
                 # Scale the bounding box back to the size of the image
@@ -54,7 +66,7 @@ def draw_bounding_boxes(image, boxes, confidences, classIDs, idxs, colors):
 
 def make_prediction(net, layer_names, labels, image, confidence, threshold):
     height, width = image.shape[:2]
-    
+
     # Create a blob and pass it through the model
     blob = cv2.dnn.blobFromImage(image, 1 / 255.0, (416, 416), swapRB=True, crop=False)
     net.setInput(blob)
@@ -104,12 +116,12 @@ if __name__ == '__main__':
         print('Creating output directory if it doesn\'t already exist')
         os.makedirs('output', exist_ok=True)
 
-    # Get the ouput layer names
+    # Get the output layer names
     layer_names = net.getLayerNames()
     layer_names = [layer_names[i[0] - 1] for i in net.getUnconnectedOutLayers()]
 
-
     if args.image_path != '':
+        # image path specified
         image = cv2.imread(args.image_path)
 
         boxes, confidences, classIDs, idxs = make_prediction(net, layer_names, labels, image, args.confidence, args.threshold)
@@ -120,13 +132,15 @@ if __name__ == '__main__':
         if args.show:
             cv2.imshow('YOLO Object Detection', image)
             cv2.waitKey(0)
-        
+
         if args.save:
             cv2.imwrite(f'output/{args.image_path.split("/")[-1]}', image)
     else:
+        # video path specified
         if args.video_path != '':
             cap = cv2.VideoCapture(args.video_path)
         else:
+            # nothing specified, using camera
             cap = cv2.VideoCapture(0)
 
         if args.save:
@@ -136,6 +150,8 @@ if __name__ == '__main__':
             name = args.video_path.split("/")[-1] if args.video_path else 'camera.avi'
             out = cv2.VideoWriter(f'output/{name}', cv2.VideoWriter_fourcc('M','J','P','G'), fps, (width, height))
 
+        previous_notification_sent = time.time()
+        # while loop for frames
         while cap.isOpened():
             ret, image = cap.read()
 
@@ -144,17 +160,32 @@ if __name__ == '__main__':
                 break
 
             boxes, confidences, classIDs, idxs = make_prediction(net, layer_names, labels, image, args.confidence, args.threshold)
+            # print("boxes {}, confidences {}, classIDs {}, idxs {}".format(boxes, confidences, classIDs, idxs))
 
             image = draw_bounding_boxes(image, boxes, confidences, classIDs, idxs, colors)
+
+            # send mqtt message
+            # if detected some id's of classes
+            if len(idxs) > 0:
+                if time.time() - previous_notification_sent > 5:
+                    # sent notify if enough time passed since the last one
+                    previous_notification_sent = time.time()
+                    text = "Security detected: "
+                    for i in idxs.flatten():
+                        text += "{}: {:.2f}".format(labels[classIDs[i]], confidences[i])
+                    # print("DETECTIONS: "+text)
+                    msg = {"Notify": text}
+                    mqtt_manager.send_msg(topic=MQTT_NOTIFY_TOPIC, msg=msg)
+
 
             if args.show:
                 cv2.imshow('YOLO Object Detection', image)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
-            
+
             if args.save:
                 out.write(image)
-    
+
         cap.release()
         if args.save:
             out.release()
