@@ -140,6 +140,10 @@ if __name__ == '__main__':
 
         # while loop for frames
         while cap.isOpened():
+
+            # Start time
+            start = time.time()
+
             ret, image = cap.read()
 
             if not ret:
@@ -150,10 +154,18 @@ if __name__ == '__main__':
 
             image = draw_bounding_boxes(image, boxes, confidences, classIDs, idxs, colors)
 
+            fps=1/(time.time()-start)
+            print("Estimated frames per second : {}".format(fps))
+            text = "FPS: {:.2f}".format(fps)
+            cv2.putText(image, text, (10, 20),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
+
             if args.show:
                 cv2.imshow('YOLO Object Detection', image)
                 if cv2.waitKey(1) & 0xFF == ord('q'):
                     break
+
+
 
             if args.save:
                 out.write(image)
