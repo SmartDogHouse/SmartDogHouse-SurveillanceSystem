@@ -18,6 +18,7 @@ referenceFrame = None
 time_sent = time.time()
 # loop over the frames of the video
 while True:
+    start=time.time()
     # grab the current frame and initialize the occupied/unoccupied
     # text
     frame = vs.read()
@@ -63,6 +64,11 @@ while True:
                 cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     cv2.putText(frame, datetime.datetime.now().strftime("%A %d %B %Y %I:%M:%S%p"),
                 (10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.35, (0, 0, 255), 1)
+    fps=1/(time.time()-start)
+    #print("Estimated frames per second : {}".format(fps))
+    text = "FPS: {:.2f}".format(fps)
+    cv2.putText(frame, text, (30, 40),
+        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 255), 2)
     # show the frame and record if the user presses a key_path
     cv2.imshow("Security Feed", frame)
     cv2.imshow("Thresh", thresh)
