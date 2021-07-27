@@ -3,6 +3,7 @@ Software for surveillance. Uses OpenCV for capturing video, running Object-Detec
 
 [![CodeFactor](https://www.codefactor.io/repository/github/smartdoghouse/smartdoghouse-surveillancesystem/badge/main)](https://www.codefactor.io/repository/github/smartdoghouse/smartdoghouse-surveillancesystem/overview/main)
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/5f6e14e8fd044111bf58ff93cfbba145)](https://www.codacy.com/gh/SmartDogHouse/SmartDogHouse-SurveillanceSystem/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SmartDogHouse/SmartDogHouse-SurveillanceSystem&amp;utm_campaign=Badge_Grade)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=SmartDogHouse_SmartDogHouse-SurveillanceSystem&metric=alert_status)](https://sonarcloud.io/dashboard?id=SmartDogHouse_SmartDogHouse-SurveillanceSystem)
 
 ![smart doghouse logo](./src/main/python/output/dogs_S.png "Smart DogHouse Logo")
 *actual results of an example image passed through the neural network
