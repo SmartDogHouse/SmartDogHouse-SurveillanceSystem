@@ -1,11 +1,12 @@
 # SmartDogHouse-SurveillanceSystem
 Software for surveillance. Uses OpenCV for capturing video, running Object-Detection, sending MQTT message for anomalies, streaming video as a server.
 
+[![CodeFactor](https://www.codefactor.io/repository/github/smartdoghouse/smartdoghouse-surveillancesystem/badge/main)](https://www.codefactor.io/repository/github/smartdoghouse/smartdoghouse-surveillancesystem/overview/main)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5f6e14e8fd044111bf58ff93cfbba145)](https://www.codacy.com/gh/SmartDogHouse/SmartDogHouse-SurveillanceSystem/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SmartDogHouse/SmartDogHouse-SurveillanceSystem&amp;utm_campaign=Badge_Grade)
+
 ![smart doghouse logo](./src/main/python/output/dogs_S.png "Smart DogHouse Logo")
 *actual results of an example image passed through the neural network
 
-[![CodeFactor](https://www.codefactor.io/repository/github/smartdoghouse/smartdoghouse-surveillancesystem/badge/main)](https://www.codefactor.io/repository/github/smartdoghouse/smartdoghouse-surveillancesystem/overview/main)
-[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5f6e14e8fd044111bf58ff93cfbba145)](https://www.codacy.com/gh/SmartDogHouse/SmartDogHouse-SurveillanceSystem/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SmartDogHouse/SmartDogHouse-SurveillanceSystem&amp;utm_campaign=Badge_Grade)
 ## Install OpenCV
 ```bash
 sudo apt-get install python3-opencv
