@@ -2,6 +2,7 @@
 Software for surveillance. Uses OpenCV for capturing video, running Object-Detection, sending MQTT message for anomalies, streaming video as a server.
 
 ![smart doghouse logo](./src/main/python/output/dogs_S.png "Smart DogHouse Logo")
+
 *actual results of an example image passed through the neural network
 ## Install OpenCV
 ```bash
