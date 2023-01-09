@@ -13,7 +13,7 @@ jobs:
         run: |
           echo "currently on branch ${GITHUB_REF#refs/heads/}" #GITHUB_REF##*/
           python -m unittest discover -s ./src/test/
-          
+
   CoverageJob:
         needs: [TestJob] #when finished this job
         if: success() #only on success
@@ -24,13 +24,13 @@ jobs:
             run: pip install coverage
           - name: Setup Git repo
             uses: actions/checkout@v2
-          - name: Github config and fetch branches  
+          - name: Github config and fetch branches
             run: |
               git config user.name github-actions
               git config user.email github-actions@github.com
               git fetch --all
               git pull --all
-          - name: Clean gh-pages branch 
+          - name: Clean gh-pages branch
             shell: bash
             run: |
               git checkout gh-pages
@@ -43,7 +43,7 @@ jobs:
               git checkout origin/develop src #Take src folder from develop
               coverage run -m unittest discover -s ./src/test/
               coverage html #generate site in htmlcov folder
-              mv htmlcov coverage_dev #rename folder 
+              mv htmlcov coverage_dev #rename folder
               rm -rdf src  #remove src folder
           - name: Test and build coverage html for main
             shell: bash
@@ -51,7 +51,7 @@ jobs:
               git checkout origin/main src #Take src folder from main
               coverage run -m unittest discover -s ./src/test/
               coverage html #generate site in htmlcov folder
-              mv htmlcov coverage_main #rename folder 
+              mv htmlcov coverage_main #rename folder
               rm -rdf src  #remove src folder
           - name: Commit changes
             shell: bash
@@ -59,7 +59,7 @@ jobs:
               git add .
               git commit -m 'Updated gh-pages coverage'
               git push
-              
+
   TelegramJobFailure:
       needs: [CoverageJob] #when finished this job
       if: failure() # if its failed
@@ -97,7 +97,7 @@ jobs:
                 ✅ <b>SUCCEDED</b>
             format: html
             disable_web_page_preview: true
-             
+
   FindTagJob:
     needs: CoverageJob
     if:  success() && github.ref == 'refs/heads/main'
@@ -124,14 +124,14 @@ jobs:
         run: |
           if [ "${{steps.extract_tag_msg.outputs.TAG_MSG}}" != "" ] #Check if the user has specified a name for the tag
           then #if yes use it
-              echo "::set-output name=RELESE_NAME::$(echo ${{steps.extract_tag_msg.outputs.TAG_MSG}})" 
+              echo "::set-output name=RELESE_NAME::$(echo ${{steps.extract_tag_msg.outputs.TAG_MSG}})"
           else #if generate one new tag incrementing fixes number like x.y.z+1
               val=$(git describe --tags --abbrev=0)
               newval=$(echo ${val##*.})
               newval=$((newval+1))
               newval="${val%.*}.$newval"
               echo "::set-output name=RELESE_NAME::$(echo $newval)"
-              echo $newval 
+              echo $newval
           fi
   DeployJob:
     needs: FindTagJob
